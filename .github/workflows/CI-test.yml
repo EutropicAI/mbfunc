@@ -22,7 +22,7 @@ jobs:
   CI:
     strategy:
       matrix:
-        os-version: ["ubuntu-22.04", "windows-latest", "macos-14"]
+        os-version: ["ubuntu-22.04", "macos-14"]
         python-version: ["3.9"]
         poetry-version: ["1.8.3"]
 
@@ -40,10 +40,8 @@ jobs:
         with:
           poetry-version: ${{ matrix.poetry-version }}
 
-      - uses: FedericoCarboni/setup-ffmpeg@v3
-        id: setup-ffmpeg
-        with:
-          ffmpeg-version: release
+      - name: Setup vapoursynth
+        uses: deadnews/action-setup-vs@v1.0.5
 
       - name: Test
         run: |
