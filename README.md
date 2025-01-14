@@ -1,7 +1,7 @@
 # mbfunc
 
-[![CI-test](https://github.com/TensoRaws/mbfunc/actions/workflows/CI-test.yml/badge.svg)](https://github.com/TensoRaws/yuisub/actions/workflows/CI-test.yml)
-[![Release](https://github.com/TensoRaws/mbfunc/actions/workflows/Release.yml/badge.svg)](https://github.com/TensoRaws/yuisub/actions/workflows/Release.yml)
+[![CI-test](https://github.com/TensoRaws/mbfunc/actions/workflows/CI-test.yml/badge.svg)](https://github.com/TensoRaws/mbfunc/actions/workflows/CI-test.yml)
+[![Release](https://github.com/TensoRaws/mbfunc/actions/workflows/Release.yml/badge.svg)](https://github.com/TensoRaws/mbfunc/actions/workflows/Release.yml)
 [![PyPI version](https://badge.fury.io/py/mbfunc.svg)](https://badge.fury.io/py/mbfunc)
 ![GitHub](https://img.shields.io/github/license/TensoRaws/mbfunc)
 
