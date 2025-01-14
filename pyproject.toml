@@ -41,11 +41,11 @@ version = "0.0.1"
 
 # Requirements
 [tool.poetry.dependencies]
-httpx = "*"
-pydantic = "*"
-python = "^3.9"
+python = "^3.10"
 
 [tool.poetry.group.dev.dependencies]
+havsfunc = {git = "https://github.com/HomeOfVapourSynthEvolution/havsfunc"}
+mvsfunc = {git = "https://github.com/HomeOfVapourSynthEvolution/mvsfunc"}
 pre-commit = "^3.7.0"
 vapoursynth = "*"
 
@@ -64,7 +64,7 @@ types-requests = "^2.28.8"
 asyncio_mode = "auto"
 
 [tool.ruff]
-extend-ignore = ["B018", "B019", "RUF001"]
+extend-ignore = ["B018", "B019", "RUF001", "RUF002", "RUF005", "RUF013", "PGH003", "PGH004", "F841", "C408", "B006", "B007", "B028", "E741", "E711", "E712", "E731", "F811"]
 extend-select = [
   "I",  # isort
   "B",  # flake8-bugbear

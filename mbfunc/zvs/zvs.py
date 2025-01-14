@@ -1,3 +1,4 @@
+# type: ignore
 import os
 import sys
 from functools import partial
@@ -406,7 +407,7 @@ def zmdg(
             mvd["sup"] = [sup, sup2, sup3] if refinemotion else [sup, sup2]
         return mvd
 
-    last = eval(
+    last = eval(  # noqa
         f"core.mv.Degrain{tr}(last,sup2,{mv_list_string},thsad=thsad,thsadc=thsadc,thscd1=thscd1,thscd2=thscd2,limit=limit,**args)"
     )
     if alim:
@@ -715,7 +716,7 @@ def n3pv(*args, **kwargs):
     bypass = mode == "bypass"
     madvr = mode == "madvr"
     madvr_algo = kwargs.get("madvr_algo", "nguSharpLow")
-    csp = eval(f"vs.RGB{depth*3}")
+    csp = eval(f"vs.RGB{depth*3}")  # noqa
     last = list()
     if len(args) == 1:
         if isinstance(args[0], list):
@@ -866,7 +867,7 @@ def bilateraluv(
                 x, w, h, src_left=l, src_top=t, csp=args.pop("format") if oldbehavior else None, **args
             )
         elif method.lower() in ["point", "bilinear", "bicubic", "lanczos", "spline16", "spline36", "spline64"]:
-            resizer = eval(
+            resizer = eval(  # noqa
                 f"lambda x,w,h,l,t,**args:core.resize.{method.capitalize()}(x,w,h,src_left=l,src_top=t,**args)"
             )
         else:
@@ -1085,26 +1086,26 @@ def badlyscaledborderdetect(
         if conditionmode == "or":
             isbad = False
             for i in range(1, ftot):
-                isbad = isbad or eval(f"f[i].props.frac{thrmode}thr")
+                isbad = isbad or eval(f"f[i].props.frac{thrmode}thr")  # noqa
                 if showfrac:
                     fracs.append(f"{letters[i]}?:{f[i].props.frac}")
-                    if eval(f"f[i].props.frac{thrmode}thr"):
+                    if eval(f"f[i].props.frac{thrmode}thr"):  # noqa
                         fracs_in_thr.append(f"{letters[i]}?:{f[i].props.frac}")
         elif conditionmode == "and":
             isbad = True
             for i in range(1, ftot):
-                isbad = isbad and eval(f"f[i].props.frac{thrmode}thr")
+                isbad = isbad and eval(f"f[i].props.frac{thrmode}thr")  # noqa
                 if showfrac:
                     fracs.append(f"{letters[i]}?:{f[i].props.frac}")
-                    if eval(f"f[i].props.frac{thrmode}thr"):
+                    if eval(f"f[i].props.frac{thrmode}thr"):  # noqa
                         fracs_in_thr.append(f"{letters[i]}?:{f[i].props.frac}")
         elif isinstance(conditionmode, int):
             countbad = 0
             for i in range(1, ftot):
-                countbad += eval(f"f[i].props.frac{thrmode}thr")
+                countbad += eval(f"f[i].props.frac{thrmode}thr")  # noqa
                 if showfrac:
                     fracs.append(f"{letters[i]}?:{f[i].props.frac}")
-                    if eval(f"f[i].props.frac{thrmode}thr"):
+                    if eval(f"f[i].props.frac{thrmode}thr"):  # noqa
                         fracs_in_thr.append(f"{letters[i]}?:{f[i].props.frac}")
             isbad = countbad >= conditionmode
         fout.props.badborder = isbad
@@ -1183,11 +1184,11 @@ def rescaleandtrytounfuckborders(
         pscrn2 = pscrn
     if mopf == None:
         mopf = lambda x: xvs.inpand(xvs.expand(x, cycle=2), cycle=2)
-    post_kernel = eval(f"core.resize.{post_kernel.capitalize()}") if not callable(post_kernel) else post_kernel
+    post_kernel = eval(f"core.resize.{post_kernel.capitalize()}") if not callable(post_kernel) else post_kernel  # noqa
     down_kernel = (
         (post_kernel if not callable(custom_nnedi3down) else custom_nnedi3down) if down_kernel == None else down_kernel
     )
-    down_kernel = eval(f"core.resize.{down_kernel.capitalize()}") if not callable(down_kernel) else down_kernel
+    down_kernel = eval(f"core.resize.{down_kernel.capitalize()}") if not callable(down_kernel) else down_kernel  # noqa
     tin = "1886" if args.get("tin") is None else args.get("tin")
     fulls = False if args.get("fulls") is None else args.get("fulls")
     fulld = True if args.get("fulld") is None else args.get("fulld")
@@ -1202,10 +1203,10 @@ def rescaleandtrytounfuckborders(
     luma32 = luma.fmtc.bitdepth(bits=32)
 
     bct = "b=b,c=c" if kernel.lower() == "bicubic" else "taps=taps" if kernel.lower() == "lanczos" else ""
-    luma_de = eval(
+    luma_de = eval(  # noqa
         f"core.descale.De{kernel.lower()}(luma32,{w},{h},src_top=-offst1,src_left=-offsl1,border_handling=border_handling,ignore_mask=ignore_mask,{bct})"
     )
-    luma_de2 = eval(
+    luma_de2 = eval(  # noqa
         f"core.descale.De{kernel.lower()}(luma32,{w},{h},src_top=offst1,src_left=offsl1,border_handling=border_handling,ignore_mask=ignore_mask,{bct})"
     )
     # luma_de=core.descale.Descale(luma32,w,h,kernel=kernel,b=b,c=c,taps=taps,src_top=-offst1,src_left=-offsl1)
@@ -1217,7 +1218,7 @@ def rescaleandtrytounfuckborders(
         if kernel == "lanczos"
         else ""
     )
-    luma_up = eval(
+    luma_up = eval(  # noqa
         f"core.resize.{kernel.capitalize()}(luma_de,{srcw},{srch},{resize_params}src_top=-offst1,src_left=-offsl1).fmtc.bitdepth(bits=16,dmode=1)"
     )
 
@@ -2159,12 +2160,12 @@ def rescale(
         luma = core.fmtc.transfer(luma, transs=tin, transd="linear", fulls=fulls, fulld=fulld)
     ####
     if kernel in ["Debilinear", "Despline16", "Despline36", "Despline64"]:
-        luma_de = eval(
+        luma_de = eval(  # noqa
             "core.descale.{k}(luma.fmtc.bitdepth(bits=32),w,h,border_handling=border_handling,ignore_mask=ignore_mask)".format(
                 k=kernel
             )
         )
-        luma_up = eval("core.resize.{k}(luma_de,src_w,src_h)".format(k=kernel[2:].capitalize())).fmtc.bitdepth(
+        luma_up = eval("core.resize.{k}(luma_de,src_w,src_h)".format(k=kernel[2:].capitalize())).fmtc.bitdepth(  # noqa
             bits=16, dmode=1
         )
     elif kernel == "Debicubic":
@@ -2330,12 +2331,12 @@ def rescalef(
     cargs = xvs.cropping_args(src.width, src.height, h, bh, bw)
     ####
     if kernel in ["Debilinear", "Despline16", "Despline36", "Despline64"]:
-        luma_de = eval(
+        luma_de = eval(  # noqa
             "core.descale.{k}(luma.fmtc.bitdepth(bits=32),border_handling=border_handling,ignore_mask=ignore_mask,**cargs.descale_gen())".format(
                 k=kernel
             )
         )
-        luma_up = eval("core.resize.{k}(luma_de,**cargs.resize_gen())".format(k=kernel[2:].capitalize()))
+        luma_up = eval("core.resize.{k}(luma_de,**cargs.resize_gen())".format(k=kernel[2:].capitalize()))  # noqa
     elif kernel == "Debicubic":
         luma_de = core.descale.Debicubic(
             luma.fmtc.bitdepth(bits=32),

@@ -1,3 +1,4 @@
+# type: ignore
 import functools
 import math
 import os
@@ -1490,7 +1491,7 @@ def props2csv(
     tostring = tostring if callable(tostring) else lambda x: x.decode("utf-8") if isinstance(x, bytes) else str(x)
 
     def tocsv(n, f, clip):
-        file.write("\n" + sep.join([str(n)] + [tostring(eval("f.props." + i, globals(), {"f": f})) for i in props]))
+        file.write("\n" + sep.join([str(n)] + [tostring(eval("f.props." + i, globals(), {"f": f})) for i in props]))  # noqa
 
         return clip
         file.close()
@@ -3408,7 +3409,7 @@ def bm3dv2_core(
 def resize_core(kernel: str, taps: int = 3, b: float = 0, c: float = 0):
     kernel = kernel.capitalize()
     if kernel in ["Bilinear", "Spline16", "Spline36", "Spline64"]:
-        return eval(f"core.resize.{kernel}")
+        return eval(f"core.resize.{kernel}")  # noqa
     elif kernel == "Bicubic":
         return functools.partial(core.resize.Bicubic, filter_param_a=b, filter_param_b=c)
     elif kernel == "Lanczos":

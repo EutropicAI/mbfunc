@@ -1,10 +1,21 @@
+from typing import Optional
+
 import mvsfunc as mvf
 import vapoursynth as vs
 from havsfunc import cround, m4, mt_expand_multi, mt_inpand_multi, scale
 from vapoursynth import core
 
 
-def DeHalo_alpha(clp, rx=2.0, ry=2.0, darkstr=1.0, brightstr=1.0, lowsens=50, highsens=50, ss=1.5):
+def DeHalo_alpha(
+    clp: vs.VideoNode,
+    rx: float = 2.0,
+    ry: float = 2.0,
+    darkstr: float = 1.0,
+    brightstr: float = 1.0,
+    lowsens: int = 50,
+    highsens: int = 50,
+    ss: float = 1.5,
+) -> vs.VideoNode:
     if not isinstance(clp, vs.VideoNode):
         raise vs.Error("DeHalo_alpha: This is not a clip")
 
@@ -56,19 +67,19 @@ def DeHalo_alpha(clp, rx=2.0, ry=2.0, darkstr=1.0, brightstr=1.0, lowsens=50, hi
 
 
 def FineDehalo(
-    src,
-    rx=2.0,
-    ry=None,
-    thmi=80,
-    thma=128,
-    thlimi=50,
-    thlima=100,
-    darkstr=1.0,
-    brightstr=1.0,
-    showmask=0,
-    excl=True,
-    edgeproc=0.0,
-):
+    src: vs.VideoNode,
+    rx: float = 2.0,
+    ry: Optional[float] = None,
+    thmi: int = 80,
+    thma: int = 128,
+    thlimi: int = 50,
+    thlima: int = 100,
+    darkstr: float = 1.0,
+    brightstr: float = 1.0,
+    showmask: int = 0,
+    excl: bool = True,
+    edgeproc: float = 0.0,
+) -> vs.VideoNode:
     if not isinstance(src, vs.VideoNode):
         raise vs.Error("FineDehalo: This is not a clip")
 
