@@ -1,0 +1,90 @@
+[build-system]
+build-backend = "poetry-core.masonry.api"
+requires = ["poetry-core"]
+
+[tool.coverage.report]
+exclude_also = [
+  "raise AssertionError",
+  "raise NotImplementedError",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+  "except Exception as e"
+]
+
+[tool.coverage.run]
+omit = [
+]
+
+[tool.mypy]
+disable_error_code = "attr-defined"
+disallow_any_generics = false
+ignore_missing_imports = true
+plugins = ["pydantic.mypy"]
+strict = true
+warn_return_any = false
+
+[tool.poetry]
+authors = ["TensoRaws"]
+classifiers = [
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12"
+]
+description = "mbf's VapourSynth functions"
+homepage = "https://github.com/TensoRaws/mbfunc"
+license = "GPL-3.0-only"
+name = "mbfunc"
+readme = "README.md"
+repository = "https://github.com/TensoRaws/mbfunc"
+version = "0.0.1"
+
+# Requirements
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[tool.poetry.group.dev.dependencies]
+havsfunc = {git = "https://github.com/HomeOfVapourSynthEvolution/havsfunc"}
+mvsfunc = {git = "https://github.com/HomeOfVapourSynthEvolution/mvsfunc"}
+pre-commit = "^3.7.0"
+vapoursynth = "*"
+
+[tool.poetry.group.test.dependencies]
+coverage = "^7.2.0"
+pytest = "^8.0"
+pytest-asyncio = "^0.24.0"
+pytest-cov = "^4.0"
+
+[tool.poetry.group.typing.dependencies]
+mypy = "^1.8.0"
+ruff = "^0.3.7"
+types-requests = "^2.28.8"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+
+[tool.ruff]
+extend-ignore = ["B018", "B019", "RUF001", "RUF002", "RUF005", "RUF013", "PGH003", "PGH004", "F841", "C408", "B006", "B007", "B028", "E741", "E711", "E712", "E731", "F811"]
+extend-select = [
+  "I",  # isort
+  "B",  # flake8-bugbear
+  "C4",  # flake8-comprehensions
+  "PGH",  # pygrep-hooks
+  "RUF",  # ruff
+  "W",  # pycodestyle
+  "YTT"  # flake8-2020
+]
+fixable = ["ALL"]
+line-length = 120
+
+[tool.ruff.format]
+indent-style = "space"
+line-ending = "auto"
+quote-style = "double"
+skip-magic-trailing-comma = false
+
+[tool.ruff.isort]
+combine-as-imports = true
+
+[tool.ruff.mccabe]
+max-complexity = 10
