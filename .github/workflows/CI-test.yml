@@ -49,9 +49,3 @@ jobs:
 
           make lint
           make test
-
-      - name: Codecov
-        if: matrix.os-version == 'ubuntu-22.04'
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
