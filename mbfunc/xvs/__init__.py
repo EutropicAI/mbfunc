@@ -1,1 +1,1 @@
-from .xvs import *
+from .xvs import *  # noqa
