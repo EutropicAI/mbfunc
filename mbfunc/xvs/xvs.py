@@ -10,14 +10,10 @@ import mvsfunc as mvf
 import vapoursynth as vs
 from vapoursynth import core
 
-import mbfunc.nnedi3_resample.nnedi3_resample as nnrs
+from mbfunc.nnedi3_resample import nnedi3_resample
 
-nnedi3_resample = nnrs.nnedi3_resample
-if hasattr(core, "znedi3") and "mode" in nnrs.nnedi3_resample.__code__.co_varnames:
-    nnedi3_resample = functools.partial(nnrs.nnedi3_resample, mode="znedi3")
-
-
-# main function
+if hasattr(core, "znedi3") and "mode" in nnedi3_resample.__code__.co_varnames:
+    nnedi3_resample = functools.partial(nnedi3_resample, mode="znedi3")
 
 
 def STPresso(clip=None, limit=3, bias=24, RGmode=4, tthr=12, tlimit=3, tbias=49, back=1):

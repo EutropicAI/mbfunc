@@ -5,8 +5,6 @@ import mvsfunc as mvf
 import vapoursynth as vs
 from vapoursynth import core
 
-__version__ = "2"
-
 
 def nnedi3_resample(
     input,

@@ -8,16 +8,15 @@ import mvsfunc as mvf
 import vapoursynth as vs
 from vapoursynth import core
 
-import mbfunc.nnedi3_resample.nnedi3_resample as nnrs
 import mbfunc.xvs.xvs as xvs
+from mbfunc.nnedi3_resample import nnedi3_dh, nnedi3_resample
 
 # Override these values if they're found in .env.
 nnrs_mode_default = os.environ.get("nnrs_mode_default", "nnedi3")
 bm3d_mode_default = os.environ.get("bm3d_mode_default", "cpu")
 bm3d_extractor_exp_default = os.environ.get("bm3d_extractor_exp_default", 0)
 
-nnrs.nnedi3_resample = partial(nnrs.nnedi3_resample, mode=nnrs_mode_default, nns=3, nsize=1, qual=2, pscrn=1)
-Nnrs = nnrs
+nnedi3_resample = partial(nnedi3_resample, mode=nnrs_mode_default, nns=3, nsize=1, qual=2, pscrn=1)
 
 
 # denoise pq hdr content by partially convert it to bt709, do denoise in bt709 then take the difference back to pq, may yeeld a better result
@@ -638,7 +637,7 @@ def nlm(src, planes=[0, 1, 2], rclip=None, h=1.2, amd=False, mode="ocl", **args)
 # line mask?
 def wtfmask(src, nnrs=True, t_l=16, t_h=26, range="full", op=[1], optc=1, bin=True, bthr=1, **args):
     if nnrs:
-        last = Nnrs.nnedi3_resample(src, csp=vs.RGBS)
+        last = nnedi3_resample(src, csp=vs.RGBS)
     else:
         last = core.resize.Bicubic(src, format=vs.RGBS, matrix_in=1)
     last = core.tcanny.TCanny(last, t_l=t_l, t_h=t_h, op=optc, **args)
@@ -735,7 +734,7 @@ def n3pv(*args, **kwargs):
                         clip, [f"upscale({_w},{_h},{madvr_algo})", f"setOutputFormat(rgbPC,{depth})"]
                     )
                 else:
-                    _tmpclp = Nnrs.nnedi3_resample(
+                    _tmpclp = nnedi3_resample(
                         clip, _w, _h, csp=csp, nns=nns, nsize=nsize, qual=qual, mode=mode, mats=mats[i], fulls=fulls[i]
                     )
                 last.append(_tmpclp)
@@ -752,7 +751,7 @@ def n3pv(*args, **kwargs):
                     args[0], [f"upscale({_w},{_h},{madvr_algo})", f"setOutputFormat(rgbPC,{depth})"]
                 )
             else:
-                _tmpclp = Nnrs.nnedi3_resample(
+                _tmpclp = nnedi3_resample(
                     args[0], _w, _h, csp=csp, nns=nns, nsize=nsize, qual=qual, mode=mode, mats=mats, fulls=fulls
                 )
             last.append(_tmpclp)
@@ -774,7 +773,7 @@ def n3pv(*args, **kwargs):
                     clip, [f"upscale({_w},{_h},{madvr_algo})", f"setOutputFormat(rgbPC,{depth})"]
                 ).sub.Subtitle(f"clip{i}")
             else:
-                _tmpclp = Nnrs.nnedi3_resample(
+                _tmpclp = nnedi3_resample(
                     clip, _w, _h, csp=csp, nns=nns, nsize=nsize, qual=qual, mode=mode, mats=mats[i], fulls=fulls[i]
                 ).sub.Subtitle(f"clip{i}")
             last.append(_tmpclp)
@@ -863,7 +862,7 @@ def bilateraluv(
 
     if lumaref:
         if method.lower() == "nnrs":
-            resizer = lambda x, w, h, l, t, **args: Nnrs.nnedi3_resample(
+            resizer = lambda x, w, h, l, t, **args: nnedi3_resample(
                 x, w, h, src_left=l, src_top=t, csp=args.pop("format") if oldbehavior else None, **args
             )
         elif method.lower() in ["point", "bilinear", "bicubic", "lanczos", "spline16", "spline36", "spline64"]:
@@ -1258,17 +1257,17 @@ def rescaleandtrytounfuckborders(
             luma_de2.fmtc.bitdepth(bits=16), transs="linear", transd=tin, fulls=fulld, fulld=fulls
         )
 
-    luma_rescale1 = Nnrs.nnedi3_dh(
+    luma_rescale1 = nnedi3_dh(
         luma_de1, mode=nnrs_mode_default, nns=nns2, nsize=nsize2, qual=qual2, pscrn=pscrn2, field=0
     ).std.Transpose()
-    luma_rescale1 = Nnrs.nnedi3_dh(
+    luma_rescale1 = nnedi3_dh(
         luma_rescale1, mode=nnrs_mode_default, nns=nns2, nsize=nsize2, qual=qual2, pscrn=pscrn2, field=0
     ).std.Transpose()
     luma_rescale1 = down_kernel(luma_rescale1, srcw, srch)
-    luma_rescale2 = Nnrs.nnedi3_dh(
+    luma_rescale2 = nnedi3_dh(
         luma_de2, mode=nnrs_mode_default, nns=nns2, nsize=nsize2, qual=qual2, pscrn=pscrn2, field=1
     ).std.Transpose()
-    luma_rescale2 = Nnrs.nnedi3_dh(
+    luma_rescale2 = nnedi3_dh(
         luma_rescale2, mode=nnrs_mode_default, nns=nns2, nsize=nsize2, qual=qual2, pscrn=pscrn2, field=1
     ).std.Transpose()
     luma_rescale2 = down_kernel(luma_rescale2, srcw, srch)
@@ -1285,7 +1284,7 @@ def rescaleandtrytounfuckborders(
     if show == "border":
         luma_rescale = luma
     elif callable(custom_nnedi3down):
-        luma_rescale = Nnrs.nnedi3_resample(
+        luma_rescale = nnedi3_resample(
             luma_de,
             luma_de.width * 2,
             luma_de.height * 2,
@@ -1298,7 +1297,7 @@ def rescaleandtrytounfuckborders(
         )
         luma_rescale = custom_nnedi3down(luma_rescale, srcw, srch).fmtc.bitdepth(bits=16)
     else:
-        luma_rescale = Nnrs.nnedi3_resample(
+        luma_rescale = nnedi3_resample(
             luma_de, srcw, srch, qual=qual, nsize=nsize, nns=nns, pscrn=pscrn, src_top=-offst1, src_left=-offsl1
         ).fmtc.bitdepth(bits=16)
     luma_rescale = core.std.MaskedMerge(luma_rescale, luma_edge, bordermask(luma, *[border] * 4))
@@ -2225,7 +2224,7 @@ def rescale(
             luma_de.fmtc.bitdepth(bits=16), transs="linear", transd=tin, fulls=fulld, fulld=fulls
         )
     if callable(custom_nnedi3down):
-        luma_rescale = nnrs.nnedi3_resample(
+        luma_rescale = nnedi3_resample(
             luma_de,
             luma_de.width * 2,
             luma_de.height * 2,
@@ -2239,7 +2238,7 @@ def rescale(
         )
         luma_rescale = custom_nnedi3down(luma_rescale, src_w, src_h).fmtc.bitdepth(bits=16)
     else:
-        luma_rescale = nnrs.nnedi3_resample(
+        luma_rescale = nnedi3_resample(
             luma_de, src_w, src_h, nsize=nsize, nns=nns, qual=qual, etype=etype, pscrn=pscrn, exp=exp, mode=mode
         ).fmtc.bitdepth(bits=16)
 
@@ -2398,7 +2397,7 @@ def rescalef(
     if callable(custom_nnedi3down):
         _cargs = cargs.nnrs_gen()
         del _cargs["target_width"], _cargs["target_height"]
-        luma_rescale = nnrs.nnedi3_resample(
+        luma_rescale = nnedi3_resample(
             luma_de,
             luma_de.width * 2,
             luma_de.height * 2,
@@ -2413,7 +2412,7 @@ def rescalef(
         )
         luma_rescale = custom_nnedi3down(luma_rescale, src_w, src_h).fmtc.bitdepth(bits=16)
     else:
-        luma_rescale = nnrs.nnedi3_resample(
+        luma_rescale = nnedi3_resample(
             luma_de, nsize=nsize, nns=nns, qual=qual, etype=etype, pscrn=pscrn, exp=exp, mode=mode, **cargs.nnrs_gen()
         ).fmtc.bitdepth(bits=16)
 
