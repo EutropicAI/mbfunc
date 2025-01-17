@@ -25,7 +25,6 @@ def mwenhance(
     if strength < 0.0:
         return diffclip
 		
-	# Constants values for sharping lut
     bits = diffclip.format.bits_per_sample
     bps_mul8 = 1 << (bits - 8) 
     floor = 0
@@ -40,7 +39,6 @@ def mwenhance(
     else:
         szrp8_div_sdmp_hi_power4_plus_1 = (szrp8 / sdmp_hi) ** 4 + 1.0
 	
-    
     if expr:
         # Expr version
         abs_diff_expr = f"x {neutral} - abs"
