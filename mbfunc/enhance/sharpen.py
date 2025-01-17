@@ -18,7 +18,7 @@ def mwenhance(
     sdmp_lo: int = 4,
     sdmp_hi: int = 48,
     soft: float = 0,
-    expr: bool = True,
+    expr: bool = True
 ) -> vs.VideoNode:
 
     if not isinstance(diffclip, vs.VideoNode):
@@ -78,7 +78,7 @@ def mwenhance(
             enhanced_clip = core.akarin.Expr(diffclip,[expr, expr if chroma else "",expr if chroma else ""])
     
     else:
-        # Orginal lut
+        # Orginal version
         def enhance_function(x) :
             abs_diff = abs(x - neutral)
             abs_diff8 = abs((x - neutral) / bps_mul8)
