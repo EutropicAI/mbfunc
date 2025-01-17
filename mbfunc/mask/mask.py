@@ -1,21 +1,12 @@
-import mvsfunc as mvf
+from typing import Optional
 
+import mvsfunc as mvf
 import vapoursynth as vs
 
-core = vs.core
 
-"""
-luna mask
-(Steal from mawen1250's script)
-"""
 def mwlmask(
-    clip: vs.VideoNode,
-    l1: int = 80,
-    h1: int = 96,
-    h2: int = None,
-    l2: int = None
+    clip: vs.VideoNode, l1: int = 80, h1: int = 96, h2: Optional[int] = None, l2: Optional[int] = None
 ) -> vs.VideoNode:
-   
     # Constants values
     sbitPS = clip.format.bits_per_sample
     black = 0
@@ -42,9 +33,7 @@ def mwlmask(
 
     # Expression for the first ramp
     slope1 = white / (h1_ - l1_)
-    expr = (
-        f"x {l1_} <= {black} "
-        f"x {h1_} < x {l1_} - {slope1} * {expr2} ? ?")
+    expr = f"x {l1_} <= {black} " f"x {h1_} < x {l1_} - {slope1} * {expr2} ? ?"
 
     # Process only luma
     plane_y = mvf.GetPlane(clip, 0)

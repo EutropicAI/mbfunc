@@ -8,8 +8,8 @@ import mvsfunc as mvf
 import vapoursynth as vs
 from vapoursynth import core
 
-from ..nnedi3_resample import nnedi3_resample 
-from ..xvs import *
+import mbfunc.xvs.xvs as xvs
+from mbfunc.nnedi3_resample import nnedi3_dh, nnedi3_resample
 
 # Override these values if they're found in .env.
 nnrs_mode_default = os.environ.get("nnrs_mode_default", "nnedi3")

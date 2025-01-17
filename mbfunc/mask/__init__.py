@@ -1,1 +1,1 @@
-from .mask import *
+from .mask import *  # noqa

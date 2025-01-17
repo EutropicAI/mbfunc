@@ -1,1 +1,1 @@
-from .sharpen import *
+from .sharpen import *  # noqa
