@@ -6,9 +6,16 @@ import re
 from typing import Optional, Union
 
 import havsfunc as haf
+import mbfunc as mbf
 import mvsfunc as mvf
 
-from vapoursynth import core
+import vapoursynth as vs
+
+core = vs.core
+
+if hasattr(core, "znedi3") and "mode" in mbf.nnedi3_resample.__code__.co_varnames:
+    nnedi3_resample = functools.partial(mbf.nnedi3_resample, mode="znedi3")
+
 
 # main function
 
