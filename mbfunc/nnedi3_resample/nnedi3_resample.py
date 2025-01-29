@@ -1,9 +1,10 @@
 # type: ignore
 import math
 
-import mvsfunc as mvf
 import vapoursynth as vs
 from vapoursynth import core
+
+import mbfunc.mvsfunc as mvf
 
 
 def nnedi3_resample(

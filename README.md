@@ -9,8 +9,7 @@ mbf's VapourSynth functions
 
 ### Requirements
 
-- [mvsfunc](https://github.com/HomeOfVapourSynthEvolution/mvsfunc)
-- [havsfunc](https://github.com/HomeOfVapourSynthEvolution/havsfunc)
+- [VapourSynth](https://github.com/vapoursynth/vapoursynth)
 
 ### Installation
 

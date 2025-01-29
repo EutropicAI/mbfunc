@@ -4,10 +4,10 @@ import sys
 from functools import partial
 from typing import Optional, Sequence, Union
 
-import mvsfunc as mvf
 import vapoursynth as vs
 from vapoursynth import core
 
+import mbfunc.mvsfunc as mvf
 import mbfunc.xvs.xvs as xvs
 from mbfunc.nnedi3_resample import nnedi3_dh, nnedi3_resample
 

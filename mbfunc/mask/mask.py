@@ -1,7 +1,8 @@
 from typing import Optional
 
-import mvsfunc as mvf
 import vapoursynth as vs
+
+import mbfunc.mvsfunc as mvf
 
 
 def mwlmask(
