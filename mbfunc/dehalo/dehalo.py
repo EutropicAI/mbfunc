@@ -1,9 +1,10 @@
 from typing import Optional
 
-import mvsfunc as mvf
 import vapoursynth as vs
-from havsfunc import cround, m4, mt_expand_multi, mt_inpand_multi, scale
 from vapoursynth import core
+
+import mbfunc.havsfunc as haf
+import mbfunc.mvsfunc as mvf
 
 
 def DeHalo_alpha(
@@ -33,12 +34,12 @@ def DeHalo_alpha(
     ox = clp.width
     oy = clp.height
 
-    halos = clp.resize.Bicubic(m4(ox / rx), m4(oy / ry), filter_param_a=1 / 3, filter_param_b=1 / 3).resize.Bicubic(
-        ox, oy, filter_param_a=1, filter_param_b=0
-    )
+    halos = clp.resize.Bicubic(
+        haf.m4(ox / rx), haf.m4(oy / ry), filter_param_a=1 / 3, filter_param_b=1 / 3
+    ).resize.Bicubic(ox, oy, filter_param_a=1, filter_param_b=0)
     are = core.std.Expr([clp.std.Maximum(), clp.std.Minimum()], expr=["x y -"])
     ugly = core.std.Expr([halos.std.Maximum(), halos.std.Minimum()], expr=["x y -"])
-    expr = f"y x - y y 0 = + / {peak} * {scale(lowsens, peak)} - y {scale(256, peak)} + {scale(512, peak)} / {highsens / 100} + *"
+    expr = f"y x - y y 0 = + / {peak} * {haf.scale(lowsens, peak)} - y {haf.scale(256, peak)} + {haf.scale(512, peak)} / {highsens / 100} + *"
     so = core.std.Expr([ugly, are], expr=[expr])
     lets = core.std.MaskedMerge(halos, clp, so)
     if ss <= 1:
@@ -48,14 +49,16 @@ def DeHalo_alpha(
             [
                 core.std.Expr(
                     [
-                        clp.resize.Lanczos(m4(ox * ss), m4(oy * ss)),
+                        clp.resize.Lanczos(haf.m4(ox * ss), haf.m4(oy * ss)),
                         lets.std.Maximum().resize.Bicubic(
-                            m4(ox * ss), m4(oy * ss), filter_param_a=1 / 3, filter_param_b=1 / 3
+                            haf.m4(ox * ss), haf.m4(oy * ss), filter_param_a=1 / 3, filter_param_b=1 / 3
                         ),
                     ],
                     expr=["x y min"],
                 ),
-                lets.std.Minimum().resize.Bicubic(m4(ox * ss), m4(oy * ss), filter_param_a=1 / 3, filter_param_b=1 / 3),
+                lets.std.Minimum().resize.Bicubic(
+                    haf.m4(ox * ss), haf.m4(oy * ss), filter_param_a=1 / 3, filter_param_b=1 / 3
+                ),
             ],
             expr=["x y max"],
         ).resize.Lanczos(ox, oy)
@@ -99,8 +102,8 @@ def FineDehalo(
     if ry is None:
         ry = rx
 
-    rx_i = cround(rx)
-    ry_i = cround(ry)
+    rx_i = haf.cround(rx)
+    ry_i = haf.cround(ry)
 
     dehaloed = DeHalo_alpha(src, rx=rx, ry=ry, darkstr=darkstr, brightstr=brightstr)
     edges = core.std.Prewitt(src)
@@ -108,14 +111,14 @@ def FineDehalo(
     # Keeps only the sharpest edges (line edges)
     strong = edges.std.Expr(
         expr=[
-            f"x {scale(thmi, peak)} - {thma - thmi} / 255 *"
+            f"x {haf.scale(thmi, peak)} - {thma - thmi} / 255 *"
             if isInteger
-            else f"x {scale(thmi, peak)} - {thma - thmi} / 255 * 0 max 1 min"
+            else f"x {haf.scale(thmi, peak)} - {thma - thmi} / 255 * 0 max 1 min"
         ]
     )
 
     # Extends them to include the potential halos
-    large = mt_expand_multi(strong, sw=rx_i, sh=ry_i)
+    large = haf.mt_expand_multi(strong, sw=rx_i, sh=ry_i)
 
     ### Exclusion zones ###
 
@@ -125,9 +128,9 @@ def FineDehalo(
     # Includes more edges than previously, but ignores simple details
     light = edges.std.Expr(
         expr=[
-            f"x {scale(thlimi, peak)} - {thlima - thlimi} / 255 *"
+            f"x {haf.scale(thlimi, peak)} - {thlima - thlimi} / 255 *"
             if isInteger
-            else f"x {scale(thlimi, peak)} - {thlima - thlimi} / 255 * 0 max 1 min"
+            else f"x {haf.scale(thlimi, peak)} - {thlima - thlimi} / 255 * 0 max 1 min"
         ]
     )
 
@@ -135,14 +138,14 @@ def FineDehalo(
     # During the growing stage, close adjacent edge masks will join and merge, forming a solid area, which will remain solid even after the shrinking stage
 
     # Mask growing
-    shrink = mt_expand_multi(light, mode="ellipse", sw=rx_i, sh=ry_i)
+    shrink = haf.mt_expand_multi(light, mode="ellipse", sw=rx_i, sh=ry_i)
 
     # At this point, because the mask was made of a shades of grey, we may end up with large areas of dark grey after shrinking
     # To avoid this, we amplify and saturate the mask here (actually we could even binarize it)
     shrink = shrink.std.Expr(expr=["x 4 *" if isInteger else "x 4 * 1 min"])
 
     # Mask shrinking
-    shrink = mt_inpand_multi(shrink, mode="ellipse", sw=rx_i, sh=ry_i)
+    shrink = haf.mt_inpand_multi(shrink, mode="ellipse", sw=rx_i, sh=ry_i)
 
     # This mask is almost binary, which will produce distinct discontinuities once applied. Then we have to smooth it
     shrink = shrink.std.Convolution(matrix=[1, 1, 1, 1, 1, 1, 1, 1, 1]).std.Convolution(

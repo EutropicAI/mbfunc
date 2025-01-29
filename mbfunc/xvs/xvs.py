@@ -5,11 +5,11 @@ import os
 import re
 from typing import Optional, Union
 
-import havsfunc as haf
-import mvsfunc as mvf
 import vapoursynth as vs
 from vapoursynth import core
 
+import mbfunc.havsfunc as haf
+import mbfunc.mvsfunc as mvf
 from mbfunc.nnedi3_resample import nnedi3_resample
 
 if hasattr(core, "znedi3") and "mode" in nnedi3_resample.__code__.co_varnames:
