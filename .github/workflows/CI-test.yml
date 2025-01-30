@@ -23,7 +23,7 @@ jobs:
     strategy:
       matrix:
         os-version: ["ubuntu-22.04", "macos-14"]
-        python-version: ["3.10"]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
         poetry-version: ["1.8.3"]
 
     runs-on: ${{ matrix.os-version }}
@@ -32,16 +32,16 @@ jobs:
         with:
           submodules: recursive
 
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+
+      - name: Setup vapoursynth
+        uses: deadnews/action-setup-vs@v1.0.5 # R70
 
       - uses: abatilo/actions-poetry@v2
         with:
           poetry-version: ${{ matrix.poetry-version }}
-
-      - name: Setup vapoursynth
-        uses: deadnews/action-setup-vs@v1.0.5
 
       - name: Test
         run: |
