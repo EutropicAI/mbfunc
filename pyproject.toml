@@ -32,11 +32,11 @@ classifiers = [
   "Programming Language :: Python :: 3.12"
 ]
 description = "mbf's VapourSynth functions"
-homepage = "https://github.com/TensoRaws/mbfunc"
+homepage = "https://github.com/EutropicAI/mbfunc"
 license = "GPL-3.0-only"
 name = "mbfunc"
 readme = "README.md"
-repository = "https://github.com/TensoRaws/mbfunc"
+repository = "https://github.com/EutropicAI/mbfunc"
 version = "0.1.1"
 
 # Requirements
