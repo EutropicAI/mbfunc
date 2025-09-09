@@ -22,13 +22,13 @@ jobs:
   CI:
     strategy:
       matrix:
-        os-version: ["ubuntu-22.04", "macos-14"]
+        os-version: ["ubuntu-latest"]
         python-version: ["3.9", "3.10", "3.11", "3.12"]
         poetry-version: ["1.8.3"]
 
     runs-on: ${{ matrix.os-version }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
 
@@ -39,7 +39,7 @@ jobs:
       - name: Setup vapoursynth
         uses: deadnews/action-setup-vs@v1.0.5 # R70
 
-      - uses: abatilo/actions-poetry@v2
+      - uses: abatilo/actions-poetry@v3
         with:
           poetry-version: ${{ matrix.poetry-version }}
 
