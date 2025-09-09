@@ -40,8 +40,8 @@ jobs:
         with:
           poetry-version: ${{ matrix.poetry-version }}
 
-      - name: Setup vapoursynth
-        uses: deadnews/action-setup-vs@v1.1.0
+      #      - name: Setup vapoursynth
+      #        uses: deadnews/action-setup-vs@v1.1.0
 
       - name: Test
         run: |
