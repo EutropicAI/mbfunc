@@ -36,12 +36,12 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      #      - name: Setup vapoursynth
-      #        uses: deadnews/action-setup-vs@v1.0.5 # R70
-
       - uses: abatilo/actions-poetry@v3
         with:
           poetry-version: ${{ matrix.poetry-version }}
+
+      - name: Setup vapoursynth
+        uses: deadnews/action-setup-vs@v1.1.0
 
       - name: Test
         run: |
